@@ -11,5 +11,5 @@ export class LiteryWorkEntity {
                   protected stock : number,
                   protected authors: AuthorEntity[],
                   protected genres: Genre[],
-                  protected status: LiteryWorkStatus,) {}
+                  protected status: LiteryWorkStatus ) {}
 }
