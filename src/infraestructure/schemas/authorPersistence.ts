@@ -1,5 +1,11 @@
 import { Schema, model } from 'mongoose';
 
+export interface IAuthor extends Document {
+    authorId: string;
+    name: string;
+    email: string;
+  }
+
 const authorPersistence = new Schema(
     {
         name: {
@@ -21,4 +27,4 @@ authorPersistence.methods.toJSON = function() {
     return literaryWork;
 }
 
-export default model('Author', authorPersistence );
+export default model<IAuthor>('Author', authorPersistence );
