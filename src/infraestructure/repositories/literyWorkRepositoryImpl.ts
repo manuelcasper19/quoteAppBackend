@@ -1,7 +1,7 @@
 
 import { IliteryWorkRepository, IPaginationOptions, IQueryResult, LiteryWorkEntity } from '../../domain';
-import { BookEntity,  LiteryWorkDirector,  NovelEntity } from '../../domain/entities';
-import { LiteryWorkBasePersistence,  NovelPersistence, BookPersistence } from '../schemas/literyworkPersistence';
+import { BookEntity, LiteryWorkDirector, NovelEntity } from '../../domain/entities';
+import { LiteryWorkBasePersistence, NovelPersistence, BookPersistence } from '../schemas/literyworkPersistence';
 import { LiteryWorkMapper } from '../mappers';
 
 
@@ -33,15 +33,18 @@ export class LiteryWorkRepositoryImpl implements IliteryWorkRepository {
         })
         return literywork ? LiteryWorkMapper.toDomainEntity(literywork, this.director) : null;
     }
+
     async findByKnowledgeArea(area: string, options: IPaginationOptions): Promise<IQueryResult<LiteryWorkEntity> | null> {
         const filter = { area: { $regex: area, $options: 'i' } };
         return this.executeQuery(filter, options);
     }
+
     async findByPublicationYear(year: number, options: IPaginationOptions): Promise<IQueryResult<LiteryWorkEntity> | null> {
         const filter = { publicationYear: { $regex: year, $options: 'i' } };
         return this.executeQuery(filter, options);
     }
-    async findByTitle(title: string,  options: IPaginationOptions): Promise<IQueryResult<LiteryWorkEntity> | null> {
+
+    async findByTitle(title: string, options: IPaginationOptions): Promise<IQueryResult<LiteryWorkEntity> | null> {
         const filter = { title: { $regex: title, $options: 'i' } };
         return this.executeQuery(filter, options);
     }
@@ -55,12 +58,14 @@ export class LiteryWorkRepositoryImpl implements IliteryWorkRepository {
         } else {
             savedEntity = await LiteryWorkBasePersistence.create(persistenceEntity);
         }
-    
+
         return LiteryWorkMapper.toDomainEntity(savedEntity, this.director);
     }
-    async getAll( options: IPaginationOptions): Promise<IQueryResult<LiteryWorkEntity> | null> {   
+
+    async getAll(options: IPaginationOptions): Promise<IQueryResult<LiteryWorkEntity> | null> {
         return this.executeQuery({}, options);
     }
+
     private async executeQuery(filter = {}, options: IPaginationOptions): Promise<IQueryResult<LiteryWorkEntity>> {
         const page = options.page || 1;
         const limit = options.limit || 10;
@@ -88,5 +93,4 @@ export class LiteryWorkRepositoryImpl implements IliteryWorkRepository {
             limit
         };
     }
-
 }
