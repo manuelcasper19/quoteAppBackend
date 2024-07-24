@@ -5,3 +5,4 @@ export * from '../entities/literyWorkStatus';
 export * from '../entities/novelEntity';
 export * from '../entities/bookEntity';
 export * from '../entities/knowlodgeArea';
+export * from '../entities/builder';
