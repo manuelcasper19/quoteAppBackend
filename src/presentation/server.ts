@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import { dbConnectionMongo } from '../infraestructure/database/mongose';
 
 class Sever {
    private app : express.Application;
@@ -16,6 +17,8 @@ class Sever {
 
     this.port = process.env.PORT || '5002';   
 
+    this.connectionDb();
+
     this.middlewares(); 
     
    }
@@ -29,7 +32,17 @@ class Sever {
       this.app.use( cors() );
 
       this.app.use( express.json() );
-   }      
+   }     
+   
+   private async connectionDb(){
+      try {
+
+         await dbConnectionMongo();
+
+      } catch (error) {
+         throw new Error('could not connect to DB '+ error as string)
+      }
+   }
   
 
 }
