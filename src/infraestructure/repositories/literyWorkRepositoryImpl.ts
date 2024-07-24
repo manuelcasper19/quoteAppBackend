@@ -1,12 +1,9 @@
-import { Document, Schema } from 'mongoose';
-import { IliteryWorkRepository, IPaginationOptions, IQueryResult, LiteryWorkEntity } from '../../domain';
-import { AuthorEntity, BookEntity, Genre, KnowlodgeArea, LiteryWorkDirector, LiteryWorkStatus, NovelEntity } from '../../domain/entities';
-import { LiteryWorkBasePersistence, ILiteryWorkBase, IBook, INovel, NovelPersistence, BookPersistence } from '../schemas/literyworkPersistence';
-import { IAuthor } from '../schemas';
 
-type LiteryWorkPersistence = ((ILiteryWorkBase & Document) | (IBook & Document) | (INovel & Document)) & {
-    authors: (Schema.Types.ObjectId | IAuthor)[];
-};
+import { IliteryWorkRepository, IPaginationOptions, IQueryResult, LiteryWorkEntity } from '../../domain';
+import { BookEntity,  LiteryWorkDirector,  NovelEntity } from '../../domain/entities';
+import { LiteryWorkBasePersistence,  NovelPersistence, BookPersistence } from '../schemas/literyworkPersistence';
+import { LiteryWorkMapper } from '../mappers';
+
 
 interface BaseFilter {
     status?: string;
@@ -34,7 +31,7 @@ export class LiteryWorkRepositoryImpl implements IliteryWorkRepository {
                 return { authorId: _id, ...rest };
             }
         })
-        return literywork ? this.toDomainEntity(literywork as LiteryWorkPersistence) : null;
+        return literywork ? LiteryWorkMapper.toDomainEntity(literywork, this.director) : null;
     }
     async findByKnowledgeArea(area: string, options: IPaginationOptions): Promise<IQueryResult<LiteryWorkEntity> | null> {
         const filter = { area: { $regex: area, $options: 'i' } };
@@ -49,7 +46,7 @@ export class LiteryWorkRepositoryImpl implements IliteryWorkRepository {
         return this.executeQuery(filter, options);
     }
     async save(literyWork: LiteryWorkEntity): Promise<LiteryWorkEntity> {
-        const persistenceEntity = this.toPersisTenceEntity(literyWork);
+        const persistenceEntity = LiteryWorkMapper.toPersisTenceEntity(literyWork);
         let savedEntity;
         if (literyWork instanceof NovelEntity) {
             savedEntity = await NovelPersistence.create(persistenceEntity);
@@ -59,7 +56,7 @@ export class LiteryWorkRepositoryImpl implements IliteryWorkRepository {
             savedEntity = await LiteryWorkBasePersistence.create(persistenceEntity);
         }
     
-        return this.toDomainEntity(savedEntity);
+        return LiteryWorkMapper.toDomainEntity(savedEntity, this.director);
     }
     async getAll( options: IPaginationOptions): Promise<IQueryResult<LiteryWorkEntity> | null> {   
         return this.executeQuery({}, options);
@@ -82,7 +79,7 @@ export class LiteryWorkRepositoryImpl implements IliteryWorkRepository {
             LiteryWorkBasePersistence.countDocuments(combinedFilter)
         ]);
 
-        const results = literyWorks.map(work => this.toDomainEntity(work as LiteryWorkPersistence));
+        const results = literyWorks.map(work => LiteryWorkMapper.toDomainEntity(work, this.director));
 
         return {
             results,
@@ -90,65 +87,6 @@ export class LiteryWorkRepositoryImpl implements IliteryWorkRepository {
             page,
             limit
         };
-    }
-    private toDomainEntity(persistence: LiteryWorkPersistence): LiteryWorkEntity {
-        const authors = (persistence.authors as IAuthor[]).map(author =>
-            new AuthorEntity(author.authorId.toString(), author.name, author.email)
-        );
-
-        return (persistence.type === 'NOVEL' ?
-            this.director.createNovel(
-                (persistence as INovel).genres.map(g => Genre[g as keyof typeof Genre]),
-                (persistence as INovel).readingAge,
-                persistence.title,
-                persistence.url,
-                persistence.publicationYear,
-                persistence.price,
-                persistence.stock,
-                authors,
-                LiteryWorkStatus[persistence.status as keyof typeof LiteryWorkStatus])
-            :
-            this.director.createBook(
-                persistence.title,
-                persistence.url,
-                persistence.publicationYear,
-                persistence.price,
-                persistence.stock,
-                authors,
-                (persistence as IBook).knowledgeAreas.map(ka => KnowlodgeArea[ka as keyof typeof KnowlodgeArea]),
-                (persistence as IBook).pages,
-                LiteryWorkStatus[persistence.status as keyof typeof LiteryWorkStatus])
-
-        )
-    }
-
-    private toPersisTenceEntity(domainEntity: LiteryWorkEntity): Omit<LiteryWorkPersistence, keyof Document> {       
-        const baseEntity: Omit<ILiteryWorkBase, keyof Document> = {
-            title: domainEntity.title,
-            url: domainEntity.url,
-            publicationYear: domainEntity.publicationYear,
-            price: domainEntity.price,
-            stock: domainEntity.stock,
-            authors: domainEntity.authors.map(author => new Schema.Types.ObjectId(author.authorId)),
-            status: domainEntity.status,
-            type: domainEntity instanceof NovelEntity ? 'NOVEL' : 'BOOK'
-        };
-
-        if (domainEntity instanceof NovelEntity) {
-            return {
-                ...baseEntity,
-                genres: domainEntity.genres,
-                readingAge: domainEntity.readingAge
-            } as Omit<INovel, keyof Document>;
-        } else if (domainEntity instanceof BookEntity) {
-            return {
-                ...baseEntity,
-                pages: domainEntity.pages,
-                knowledgeAreas: domainEntity.KnowlodgeAreas
-            } as Omit<IBook, keyof Document>;
-        }
-    
-        return baseEntity;
     }
 
 }
