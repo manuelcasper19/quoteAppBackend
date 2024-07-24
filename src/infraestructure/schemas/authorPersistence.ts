@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 export interface IAuthor extends Document {
-    authorId: string;
+    authorId: Schema.Types.ObjectId;
     name: string;
     email: string;
   }

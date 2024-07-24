@@ -1,8 +1,8 @@
 export class AuthorEntity {
 
-    private authorId: string;
-    private name: string;
-    private email: string;
+    public authorId: string;
+    public name: string;
+    public email: string;
 
     constructor( authorId: string, name: string, email: string){
         this.authorId = authorId;
