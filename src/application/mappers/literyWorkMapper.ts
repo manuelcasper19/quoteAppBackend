@@ -25,6 +25,6 @@ export class LiteryWorkMapper {
             }
             throw new Error(`Invalid knowledge area: ${area}`);
         });
-    }
+    }  
 
 }

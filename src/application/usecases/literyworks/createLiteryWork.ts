@@ -1,9 +1,35 @@
-import { IUseCase } from '../../../domain';
-import { LiteryWorkCreateDto, LiteryWorkResponseDto } from '../../';
+import { IliteryWorkRepository, IUseCase, LiteryWorkDirector } from '../../../domain';
+import { LiteryWorkCreateDto, LiteryWorkMapper, AuthorMapper, LiteryWorkResponseDto } from '../../';
 
-export class CreateLiteryWork implements IUseCase<LiteryWorkCreateDto, LiteryWorkResponseDto>{
+
+export class CreateLiteryWorkUseCase implements IUseCase<LiteryWorkCreateDto, LiteryWorkResponseDto> {
+
+    constructor( private literyWorkRepository : IliteryWorkRepository, 
+                 private literyWorkBuilder    : LiteryWorkDirector
+     ){}
   
-    execute(tRequest: LiteryWorkCreateDto): LiteryWorkResponseDto {
-        
+    execute({ type, 
+              genres, 
+              readingAge, 
+              title, 
+              url, 
+              publicationYear, 
+              price, 
+              stock, 
+              authors, 
+              status  }: LiteryWorkCreateDto ): LiteryWorkResponseDto {
+                
+        if(type === 'NOVEL'){
+            this.literyWorkBuilder.createNovel( 
+                LiteryWorkMapper.mapGenres( genres ), 
+                readingAge, 
+                title, 
+                url, 
+                publicationYear, 
+                price, 
+                stock, 
+                AuthorMapper.mapAuthors(authors), 
+                LiteryWorkMapper.mapStatus(status)  )
+        }
     }
 }

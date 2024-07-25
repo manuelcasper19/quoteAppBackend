@@ -1,9 +1,11 @@
+import { AuthorDto } from './';
+
 export class LiteryWorkCreateDto {
-    
+
   constructor(  public type: string,
                 public id: string,
                 public title: string,
-                public authors: string,
+                public authors: AuthorDto[],
                 public url: string,
                 public status: string,
                 public publicationYear: number,
