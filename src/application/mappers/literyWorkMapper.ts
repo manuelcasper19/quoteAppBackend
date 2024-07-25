@@ -1,5 +1,5 @@
-import { BookEntity, Genre, KnowlodgeArea, LiteryWorkEntity, LiteryWorkStatus, NovelEntity } from '../../domain';
-import { AuthorDto, BookDto, LiteryWorkDto, NovelDto } from '../dtos';
+import { BookEntity, Genre, IQueryResult, KnowlodgeArea, LiteryWorkEntity, LiteryWorkStatus, NovelEntity } from '../../domain';
+import { AuthorDto, BookDto, LiteryWorkDto, LiteryWorkQueryResultDto, NovelDto } from '../dtos';
 
 export class LiteryWorkMapper {
 
@@ -69,6 +69,16 @@ export class LiteryWorkMapper {
         }
     
         throw new Error('Unknown literary work type');
+    }
+
+    static convertQueryResultToDto(queryResult: IQueryResult<LiteryWorkEntity>): LiteryWorkQueryResultDto {
+        const results = queryResult.results.map(this.convertToResponseDto);
+        return new LiteryWorkQueryResultDto(
+            results,
+            queryResult.total,
+            queryResult.page,
+            queryResult.limit
+        );
     }
 
 }
