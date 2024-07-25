@@ -1,8 +1,8 @@
 import { BookEntity, IliteryWorkRepository, IUseCase, LiteryWorkDirector, LiteryWorkEntity, NovelEntity } from '../../../domain';
-import { LiteryWorkCreateDto, LiteryWorkMapper, AuthorMapper, LiteryWorkResponseDto } from '../../';
+import { LiteryWorkCreateDto, LiteryWorkMapper, AuthorMapper, BaseLiteryWorkResponseDto } from '../../';
 
 
-export class CreateLiteryWorkUseCase implements IUseCase<LiteryWorkCreateDto, LiteryWorkResponseDto> {
+export class CreateLiteryWorkUseCase implements IUseCase<LiteryWorkCreateDto, BaseLiteryWorkResponseDto > {
 
     constructor( private literyWorkRepository : IliteryWorkRepository, 
                  private literyWorkBuilder    : LiteryWorkDirector
@@ -19,7 +19,7 @@ export class CreateLiteryWorkUseCase implements IUseCase<LiteryWorkCreateDto, Li
               authors, 
               status,              
             knowledgeAreas,
-              pages  }: LiteryWorkCreateDto ):  Promise<LiteryWorkResponseDto> {
+              pages  }: LiteryWorkCreateDto ):  Promise<BaseLiteryWorkResponseDto> {
         let literyWork;        
         if(type === 'NOVEL'){
             literyWork = this.literyWorkBuilder.createNovel( 

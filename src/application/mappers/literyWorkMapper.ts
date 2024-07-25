@@ -1,5 +1,5 @@
 import { BookEntity, Genre, KnowlodgeArea, LiteryWorkEntity, LiteryWorkStatus, NovelEntity } from '../../domain';
-import { AuthorDto, LiteryWorkResponseDto } from '../dtos';
+import { AuthorDto, BaseLiteryWorkResponseDto, BookResponseDto, NovelResponseDto } from '../dtos';
 
 export class LiteryWorkMapper {
 
@@ -28,9 +28,8 @@ export class LiteryWorkMapper {
         });
     }  
 
-    static convertToResponseDto(entity: LiteryWorkEntity): LiteryWorkResponseDto {
-        const baseResponse = {
-            type: entity instanceof NovelEntity ? 'NOVEL' : 'BOOK',
+    static convertToResponseDto(entity: LiteryWorkEntity): BaseLiteryWorkResponseDto {
+        const baseProps = {
             literyWorkId: entity.literyWorkId,
             title: entity.title,
             authors: entity.authors.map(author => new AuthorDto(author.authorId, author.name, author.email)),
@@ -42,36 +41,30 @@ export class LiteryWorkMapper {
         };
     
         if (entity instanceof NovelEntity) {
-            return new LiteryWorkResponseDto(
-                baseResponse.type,
-                baseResponse.literyWorkId,
-                baseResponse.title,
-                baseResponse.authors,
-                baseResponse.url,
-                baseResponse.status,
-                baseResponse.publicationYear,
-                baseResponse.stock,
-                baseResponse.price,
+            return new NovelResponseDto(
+                baseProps.literyWorkId,
+                baseProps.title,
+                baseProps.authors,
+                baseProps.url,
+                baseProps.status,
+                baseProps.publicationYear,
+                baseProps.stock,
+                baseProps.price,
                 entity.genres.map(g => g.toString()),
-                undefined,
-                undefined,
                 entity.readingAge
             );
         } else if (entity instanceof BookEntity) {
-            return new LiteryWorkResponseDto(
-                baseResponse.type,
-                baseResponse.literyWorkId,
-                baseResponse.title,
-                baseResponse.authors,
-                baseResponse.url,
-                baseResponse.status,
-                baseResponse.publicationYear,
-                baseResponse.stock,
-                baseResponse.price,
-                undefined,
+            return new BookResponseDto(
+                baseProps.literyWorkId,
+                baseProps.title,
+                baseProps.authors,
+                baseProps.url,
+                baseProps.status,
+                baseProps.publicationYear,
+                baseProps.stock,
+                baseProps.price,
                 entity.KnowlodgeAreas.map(ka => ka.toString()),
-                entity.pages,
-                undefined
+                entity.pages
             );
         }
     
