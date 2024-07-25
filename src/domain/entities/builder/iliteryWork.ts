@@ -4,7 +4,8 @@ export interface ILiteryWorkBuilder {
 
     setType( type: string ): void;
 
-    setLiteryWork( title: string, 
+    setLiteryWork( literyWorkId: string,
+                   title: string, 
                    url: string, 
                    publicationYear: number,                    
                    price: number, 

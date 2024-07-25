@@ -1,7 +1,7 @@
-
+import { Model } from 'mongoose';
 import { IliteryWorkRepository, IPaginationOptions, IQueryResult, LiteryWorkEntity } from '../../domain';
 import { BookEntity, LiteryWorkDirector, NovelEntity } from '../../domain/entities';
-import { LiteryWorkBasePersistence, NovelPersistence, BookPersistence } from '../schemas/literyworkPersistence';
+import { LiteryWorkBasePersistence, NovelPersistence, BookPersistence, ILiteryWorkBase } from '../schemas/literyworkPersistence';
 import { LiteryWorkMapper } from '../mappers';
 
 
@@ -15,13 +15,12 @@ export class LiteryWorkRepositoryImpl implements IliteryWorkRepository {
     async findByAuthor(author: string, options: IPaginationOptions): Promise<IQueryResult<LiteryWorkEntity>> {
         const filter = { author: { $regex: author, $options: 'i' } };
         return this.executeQuery(filter, options);
-
     }
+
     async findByGenreNovel(genre: string, options: IPaginationOptions): Promise<IQueryResult<LiteryWorkEntity> | null> {
         const filter = { genre: { $regex: genre, $options: 'i' } };
         return this.executeQuery(filter, options);
     }
-
     async findById(id: string): Promise<LiteryWorkEntity | null> {
 
         const literywork = await LiteryWorkBasePersistence.findById(id).populate({
@@ -48,20 +47,24 @@ export class LiteryWorkRepositoryImpl implements IliteryWorkRepository {
         const filter = { title: { $regex: title, $options: 'i' } };
         return this.executeQuery(filter, options);
     }
-    async save(literyWork: LiteryWorkEntity): Promise<LiteryWorkEntity> {
+    async createOrUpdate(literyWork: LiteryWorkEntity): Promise<LiteryWorkEntity> {
         const persistenceEntity = LiteryWorkMapper.toPersisTenceEntity(literyWork);
-        let savedEntity;
+        let persistenceModel: Model<ILiteryWorkBase>;
+    
         if (literyWork instanceof NovelEntity) {
-            savedEntity = await NovelPersistence.create(persistenceEntity);
+            persistenceModel = NovelPersistence as unknown as Model<ILiteryWorkBase>;
         } else if (literyWork instanceof BookEntity) {
-            savedEntity = await BookPersistence.create(persistenceEntity);
+            persistenceModel = BookPersistence as unknown as Model<ILiteryWorkBase>;
         } else {
-            savedEntity = await LiteryWorkBasePersistence.create(persistenceEntity);
-        }
-
+            persistenceModel = LiteryWorkBasePersistence;
+        }   
+        const savedEntity = await this.saveOrUpdate(persistenceModel, literyWork.literyWorkId, persistenceEntity);
+    
+        if (!savedEntity)  throw new Error(`Failed to save or update LiteryWork`);        
+    
         return LiteryWorkMapper.toDomainEntity(savedEntity, this.director);
-    }
-
+    } 
+    
     async getAll(options: IPaginationOptions): Promise<IQueryResult<LiteryWorkEntity> | null> {
         return this.executeQuery({}, options);
     }
@@ -76,9 +79,7 @@ export class LiteryWorkRepositoryImpl implements IliteryWorkRepository {
         if (options.userRole === 'ADMIN_ROLE') {
             baseFilter = {};
         }
-
         const combinedFilter = { ...baseFilter, ...filter };
-
         const [literyWorks, total] = await Promise.all([
             LiteryWorkBasePersistence.find(combinedFilter).skip(skip).limit(limit).populate('authors'),
             LiteryWorkBasePersistence.countDocuments(combinedFilter)
@@ -92,5 +93,17 @@ export class LiteryWorkRepositoryImpl implements IliteryWorkRepository {
             page,
             limit
         };
+    }
+    private async saveOrUpdate<T extends ILiteryWorkBase>(model: Model<T>, id: string | undefined, entity: Partial<T>): Promise<T> {
+        if (id) {
+            const updatedEntity = await model.findByIdAndUpdate( id, entity, { new: true } );
+            if (!updatedEntity) {
+                throw new Error(`Failed to update entity with id ${id}`);
+            }
+            return updatedEntity;
+        } else {
+            const createdEntity = new model( entity );
+            return await createdEntity.save();
+        }
     }
 }

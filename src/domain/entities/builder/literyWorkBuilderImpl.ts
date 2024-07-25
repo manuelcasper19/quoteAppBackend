@@ -5,7 +5,7 @@ import { ILiteryWorkBuilder } from './iliteryWork';
 export class LiteryWorkBuilderImpl implements ILiteryWorkBuilder {
 
     private type: string = '';
-    private id: string = '';
+    private literyWorkId: string = '';
     private title: string = '';
     private authors: AuthorEntity[] = [];
     private url: string = '';
@@ -22,7 +22,8 @@ export class LiteryWorkBuilderImpl implements ILiteryWorkBuilder {
       this.type = type;     
   }
 
-  setLiteryWork(title: string, url: string, publicationYear: number, price: number, stock: number): void {
+  setLiteryWork(literyWorkId: string, title: string, url: string, publicationYear: number, price: number, stock: number): void {
+    this.literyWorkId = literyWorkId;
     this.title = title;
     this.url = url;
     this.publicationYear = publicationYear;
@@ -52,7 +53,7 @@ export class LiteryWorkBuilderImpl implements ILiteryWorkBuilder {
       return ( this.type === 'NOVEL' ? 
             new NovelEntity( this.genres,
                              this.readingAge,
-                             '', 
+                             this.literyWorkId, 
                              this.title, 
                              this.url, 
                              this.publicationYear,                              
@@ -62,7 +63,7 @@ export class LiteryWorkBuilderImpl implements ILiteryWorkBuilder {
                              this.status!) :
             new BookEntity( this.pages,
                             this.knowledgeAreas,
-                            '', 
+                            this.literyWorkId, 
                             this.title, 
                             this.url, 
                             this.publicationYear,                            

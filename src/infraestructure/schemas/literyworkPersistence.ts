@@ -1,4 +1,4 @@
-import { Schema, model, Document  } from 'mongoose';
+import { Schema, model, Document, Model   } from 'mongoose';
 
 interface ILiteryWorkBase extends Document {
   title: string;
