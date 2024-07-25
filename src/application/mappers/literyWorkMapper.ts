@@ -1,5 +1,5 @@
 import { BookEntity, Genre, KnowlodgeArea, LiteryWorkEntity, LiteryWorkStatus, NovelEntity } from '../../domain';
-import { AuthorDto, BaseLiteryWorkResponseDto, BookResponseDto, NovelResponseDto } from '../dtos';
+import { AuthorDto, BookDto, LiteryWorkDto, NovelDto } from '../dtos';
 
 export class LiteryWorkMapper {
 
@@ -28,7 +28,7 @@ export class LiteryWorkMapper {
         });
     }  
 
-    static convertToResponseDto(entity: LiteryWorkEntity): BaseLiteryWorkResponseDto {
+    static convertToResponseDto(entity: LiteryWorkEntity): LiteryWorkDto  {
         const baseProps = {
             literyWorkId: entity.literyWorkId,
             title: entity.title,
@@ -41,7 +41,7 @@ export class LiteryWorkMapper {
         };
     
         if (entity instanceof NovelEntity) {
-            return new NovelResponseDto(
+            return new NovelDto(
                 baseProps.literyWorkId,
                 baseProps.title,
                 baseProps.authors,
@@ -54,7 +54,7 @@ export class LiteryWorkMapper {
                 entity.readingAge
             );
         } else if (entity instanceof BookEntity) {
-            return new BookResponseDto(
+            return new BookDto(
                 baseProps.literyWorkId,
                 baseProps.title,
                 baseProps.authors,

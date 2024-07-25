@@ -1,19 +1,19 @@
 import { BookEntity, IliteryWorkRepository, IUseCase, LiteryWorkDirector, LiteryWorkEntity, NovelEntity } from '../../../domain';
-import { LiteryWorkMapper, AuthorMapper,  LiteryWorkDto, NovelDto, BookDto } from '../../';
+import { LiteryWorkMapper, AuthorMapper,  LiteryWorkDto, NovelDto, BookDto } from '../..';
 
 
-export class CreateLiteryWorkUseCase implements IUseCase<LiteryWorkDto, LiteryWorkDto> {
+export class CreateOrUpdateLiteryWorkUseCase implements IUseCase<LiteryWorkDto, LiteryWorkDto> {
 
     constructor( private literyWorkRepository : IliteryWorkRepository, 
                  private literyWorkBuilder    : LiteryWorkDirector
-     ){}
+                ){}
   
      async execute(dto: LiteryWorkDto): Promise<LiteryWorkDto> {
         let literyWork: LiteryWorkEntity;
 
         if (dto instanceof NovelDto) {
             literyWork = this.literyWorkBuilder.createNovel(
-                dto.literyWorkId,
+                dto.literyWorkId || '',
                 LiteryWorkMapper.mapGenres(dto.genres),
                 dto.readingAge,
                 dto.title,
@@ -26,7 +26,7 @@ export class CreateLiteryWorkUseCase implements IUseCase<LiteryWorkDto, LiteryWo
             ) as NovelEntity;
         } else if (dto instanceof BookDto) {
             literyWork = this.literyWorkBuilder.createBook(
-                dto.literyWorkId,
+                dto.literyWorkId || '', 
                 dto.title,
                 dto.url,
                 dto.publicationYear,
@@ -41,7 +41,7 @@ export class CreateLiteryWorkUseCase implements IUseCase<LiteryWorkDto, LiteryWo
             throw new Error('Invalid LiteryWorkDto type');
         }
 
-        const savedEntity = await this.literyWorkRepository.save(literyWork);
+        const savedEntity = await this.literyWorkRepository.createOrUpdate(literyWork);
 
         return LiteryWorkMapper.convertToResponseDto(savedEntity);
     }

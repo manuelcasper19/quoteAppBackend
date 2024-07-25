@@ -3,7 +3,7 @@ import { IPaginationOptions, IQueryResult } from '../interfaces';
 
 export interface IliteryWorkRepository {
 
-   save( literyWork: LiteryWorkEntity ): Promise<LiteryWorkEntity>;
+   createOrUpdate( literyWork: LiteryWorkEntity ): Promise<LiteryWorkEntity>;
 
    findById( id: string): Promise<LiteryWorkEntity | null >;
 
