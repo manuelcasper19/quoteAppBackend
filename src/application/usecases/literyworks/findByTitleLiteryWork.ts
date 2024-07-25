@@ -1,5 +1,5 @@
 import { IliteryWorkRepository, IUseCase } from '../../../domain';
-import { LiteryWorkQueryResultDto, LiteryWorkMapper } from '../../';
+import { LiteryWorkQueryResultDto, LiteryWorkMapper } from '../..';
 
 export class FindByTitleLiteryWorkUseCase implements IUseCase<string, LiteryWorkQueryResultDto> {
     
