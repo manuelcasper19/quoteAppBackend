@@ -1,4 +1,4 @@
-export enum KnowlodgeArea {
+export enum KnowledgeAreaDto {
     LITERATURE = 'LITERATURE',
     SCIENCE = 'SCIENCE',
     HISTORY = 'HISTORY',

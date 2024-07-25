@@ -52,7 +52,7 @@ export class LiteryWorkBuilderImpl implements ILiteryWorkBuilder {
       return ( this.type === 'NOVEL' ? 
             new NovelEntity( this.genres,
                              this.readingAge,
-                             '', 
+                             this.id, 
                              this.title, 
                              this.url, 
                              this.publicationYear,                              
@@ -62,7 +62,7 @@ export class LiteryWorkBuilderImpl implements ILiteryWorkBuilder {
                              this.status!) :
             new BookEntity( this.pages,
                             this.knowledgeAreas,
-                            '', 
+                            this.id, 
                             this.title, 
                             this.url, 
                             this.publicationYear,                            
