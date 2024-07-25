@@ -44,6 +44,7 @@ static toDomainEntity(persistence: LiteryWorkPersistence, director: LiteryWorkDi
 
     return (persistence.type === 'NOVEL' ?
         director.createNovel(
+            persistence.id,
             (persistence as INovel).genres.map(g => Genre[g as keyof typeof Genre]),
             (persistence as INovel).readingAge,
             persistence.title,
@@ -55,6 +56,7 @@ static toDomainEntity(persistence: LiteryWorkPersistence, director: LiteryWorkDi
             LiteryWorkStatus[persistence.status as keyof typeof LiteryWorkStatus])
         :
             director.createBook(
+            persistence.id,
             persistence.title,
             persistence.url,
             persistence.publicationYear,
