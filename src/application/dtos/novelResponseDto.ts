@@ -1,5 +1,5 @@
 import { AuthorDto } from "./authorDto";
-import { BaseLiteryWorkResponseDto } from "./literyworResponseDto";
+import { BaseLiteryWorkResponseDto } from "./literyworkDto";
 
 export class NovelResponseDto extends BaseLiteryWorkResponseDto {
     constructor(

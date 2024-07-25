@@ -1,58 +1,49 @@
 import { BookEntity, IliteryWorkRepository, IUseCase, LiteryWorkDirector, LiteryWorkEntity, NovelEntity } from '../../../domain';
-import { LiteryWorkCreateDto, LiteryWorkMapper, AuthorMapper, BaseLiteryWorkResponseDto } from '../../';
+import { LiteryWorkMapper, AuthorMapper,  LiteryWorkDto, NovelDto, BookDto } from '../../';
 
 
-export class CreateLiteryWorkUseCase implements IUseCase<LiteryWorkCreateDto, BaseLiteryWorkResponseDto > {
+export class CreateLiteryWorkUseCase implements IUseCase<LiteryWorkDto, LiteryWorkDto> {
 
     constructor( private literyWorkRepository : IliteryWorkRepository, 
                  private literyWorkBuilder    : LiteryWorkDirector
      ){}
   
-   async execute({ type, 
-              genres, 
-              readingAge, 
-              title, 
-              url, 
-              publicationYear, 
-              price, 
-              stock, 
-              authors, 
-              status,              
-            knowledgeAreas,
-              pages  }: LiteryWorkCreateDto ):  Promise<BaseLiteryWorkResponseDto> {
-        let literyWork;        
-        if(type === 'NOVEL'){
-            literyWork = this.literyWorkBuilder.createNovel( 
-                '',
-                LiteryWorkMapper.mapGenres( genres ), 
-                readingAge, 
-                title, 
-                url, 
-                publicationYear, 
-                price, 
-                stock, 
-                AuthorMapper.mapAuthors(authors), 
-                LiteryWorkMapper.mapStatus(status)  ) as NovelEntity;
-        
-        }
-        if(type === 'BOOK'){
-            literyWork = this.literyWorkBuilder.createBook( 
-                '',
-                title,
-                url,
-                publicationYear,
-                price, 
-                stock,
-                authors,
-                LiteryWorkMapper.mapKnowledgeAreas( knowledgeAreas ),
-                pages,
-                LiteryWorkMapper.mapStatus(status) ) as BookEntity;
-            }
-            
-            const savedEntity  = await this.literyWorkRepository.save( literyWork as LiteryWorkEntity );
-           
-            return LiteryWorkMapper.convertToResponseDto( savedEntity );
+     async execute(dto: LiteryWorkDto): Promise<LiteryWorkDto> {
+        let literyWork: LiteryWorkEntity;
 
+        if (dto instanceof NovelDto) {
+            literyWork = this.literyWorkBuilder.createNovel(
+                dto.literyWorkId,
+                LiteryWorkMapper.mapGenres(dto.genres),
+                dto.readingAge,
+                dto.title,
+                dto.url,
+                dto.publicationYear,
+                dto.price,
+                dto.stock,
+                AuthorMapper.mapAuthors(dto.authors),
+                LiteryWorkMapper.mapStatus(dto.status)
+            ) as NovelEntity;
+        } else if (dto instanceof BookDto) {
+            literyWork = this.literyWorkBuilder.createBook(
+                dto.literyWorkId,
+                dto.title,
+                dto.url,
+                dto.publicationYear,
+                dto.price,
+                dto.stock,
+                dto.authors,
+                LiteryWorkMapper.mapKnowledgeAreas(dto.knowledgeAreas),
+                dto.pages,
+                LiteryWorkMapper.mapStatus(dto.status)
+            ) as BookEntity;
+        } else {
+            throw new Error('Invalid LiteryWorkDto type');
+        }
+
+        const savedEntity = await this.literyWorkRepository.save(literyWork);
+
+        return LiteryWorkMapper.convertToResponseDto(savedEntity);
     }
     
 }
