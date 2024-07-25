@@ -33,3 +33,4 @@ The application follows Hexagonal Architecture (also known as Ports and Adapters
 * Design Patterns:
   * Builder Pattern: Used with the Director to construct complex objects like books and novels.
 
+![Architecture Diagram](https://github.com/manuelcasper19/quoteAppBackend/wiki/Architecture)
