@@ -4,18 +4,22 @@ export interface IAuthor extends Document {
     authorId: Schema.Types.ObjectId;
     name: string;
     email: string;
+    active: boolean;
   }
 
 const authorPersistence = new Schema(
     {
         name: {
-            type: String,
-            unique: true,
+            type: String,            
             require: [ true, 'El nombre del autor es requerido']
         },
         email: {
-            type: String,       
+            type: String,  
+            unique: true,     
             require: [ true, 'El email del autor es requerido']
+        },
+        active: {
+            type: Boolean
         }       
   
     }
