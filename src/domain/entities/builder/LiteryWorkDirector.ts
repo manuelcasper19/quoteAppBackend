@@ -1,8 +1,8 @@
 import { AuthorEntity, Genre, KnowlodgeArea, LiteryWorkEntity, LiteryWorkStatus } from '../';
-
+import { ILiteryWorkDirector } from '../../interfaces';
 import { ILiteryWorkBuilder } from './iliteryWork';
 
-export class LiteryWorkDirector {
+export class LiteryWorkDirector implements ILiteryWorkDirector {
     private builder: ILiteryWorkBuilder;
 
     constructor(builder: ILiteryWorkBuilder) {

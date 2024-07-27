@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import Server from './presentation/server';
+import Server from './infraestructure/server';
 
 const server = new Server()
 

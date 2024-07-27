@@ -1,7 +1,7 @@
 import { IliteryWorkRepository, IUseCase } from '../../../domain';
 import { LiteryWorkDto, LiteryWorkMapper } from '../../';
 
-export class CreateOrUpdateLiteryWorkUseCase implements IUseCase<string, LiteryWorkDto> {
+export class GetLiteryWorkByIdUseCase implements IUseCase<string, LiteryWorkDto> {
     
     constructor( private literyWorkRepository : IliteryWorkRepository) {}
    async execute( literyWorkId: string ): Promise<LiteryWorkDto> {

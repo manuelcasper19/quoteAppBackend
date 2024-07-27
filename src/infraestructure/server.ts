@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { dbConnectionMongo } from '../infraestructure/database/mongose';
+import { dbConnectionMongo } from './database/mongose';
 
 class Sever {
    private app : express.Application;

@@ -6,7 +6,7 @@ type SearchMethod = Extract<keyof IliteryWorkRepository,
   'findByTitle' | 'findByAuthor' | 'findByPublicationYear' | 'findByGenreNovel' | 'findByKnowledgeArea' | 'getAll'
 >;
 
-interface SearchParams {
+export interface SearchParams {
     method: SearchMethod;
     param?: string | number;
     options?: IPaginationOptions;
