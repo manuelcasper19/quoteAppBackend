@@ -4,6 +4,7 @@ import { dbConnectionMongo } from './database/mongose';
 import { Container } from 'inversify';
 import { container } from './containers';
 import { InversifyExpressServer } from 'inversify-express-utils';
+import { errorHandler } from './http';
 
 class Sever {
    private app : express.Application;
@@ -32,6 +33,8 @@ class Sever {
     });
     
     this.app = this.server.build();
+
+    this.app.use(errorHandler);
 
     this.connectionDb();
 

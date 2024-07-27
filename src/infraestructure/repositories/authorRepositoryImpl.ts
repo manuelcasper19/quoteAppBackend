@@ -1,4 +1,5 @@
 import { injectable } from 'inversify';
+import mongoose from 'mongoose';
 import { AuthorEntity, IAuthorRepository } from '../../domain';
 import { AuthorMapper } from '../mappers';
 import AuthorPersistence from '../schemas/authorPersistence';
@@ -23,8 +24,18 @@ export class AuthorRepositoryImpl implements IAuthorRepository {
     }
 
     async findByIdAuthor(id: string): Promise<AuthorEntity | null> {
-
-        return this.findAuthor({ _id: id });
+        try {
+            if (!mongoose.Types.ObjectId.isValid(id)) {
+                return null;
+            }
+            const authorDoc = await AuthorPersistence.findById(id);
+            return authorDoc ? AuthorMapper.toDomainEntity(authorDoc) : null;
+        } catch (error) {
+            if (error instanceof mongoose.Error.CastError) {
+                return null;
+            }
+            throw error;
+        }
     }
     async findByNameAuthor(name: string): Promise<AuthorEntity[] | null> {
      
@@ -38,10 +49,4 @@ export class AuthorRepositoryImpl implements IAuthorRepository {
 
         return authorDocs.map(authorDoc => AuthorMapper.toDomainEntity(authorDoc));
     }
-    private async findAuthor(filter: object): Promise<AuthorEntity | null> {
-        const authorDoc = await AuthorPersistence.findOne(filter);
-        if (!authorDoc) return null;
-        return AuthorMapper.toDomainEntity(authorDoc);
-    }
-
 }

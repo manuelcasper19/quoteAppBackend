@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { IAuthorRepository, IUseCase } from '../../../domain';
+import { AppError, IAuthorRepository, IUseCase } from '../../../domain';
 import { AuthorDto, AuthorMapper } from '../../';
 import { TYPESDI } from '../../../infraestructure/containers/types';
 
@@ -12,6 +12,8 @@ export class CreateOrUpdateAuthorUseCase implements IUseCase<AuthorDto, AuthorDt
     async execute(dto: AuthorDto): Promise<AuthorDto> {
 
        const authorBd = await this.authorRepository.createOrUpdateAuthor( dto );
+
+       if(!authorBd) throw new AppError(`No se pudo crear el author `, 400 );
 
        return AuthorMapper.toDto( authorBd );
     }

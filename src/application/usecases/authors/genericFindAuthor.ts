@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { AuthorEntity, IAuthorRepository, IUseCase } from '../../../domain';
+import { AppError, AuthorEntity, IAuthorRepository, IUseCase } from '../../../domain';
 import { AuthorDto, AuthorMapper } from '../../';
 import { TYPESDI } from '../../../infraestructure/containers/types';
 
@@ -32,7 +32,11 @@ export class GenericFindAuthorUseCase implements IUseCase<SearchParamsAuthor, Au
 
         const result = await repositoryAuthorMethod( param );
 
-        if(!result) throw new Error(`No se encontro author con : ${param}`);
+        console.log(result)
+        if (!result || (Array.isArray(result) && result.length === 0)) {
+            throw new AppError(`No se encontró author con: ${param}`, 404);
+        }
+
 
         return (Array.isArray(result)) 
             ? result.map( author => AuthorMapper.toDto( author ))
