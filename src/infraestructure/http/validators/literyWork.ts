@@ -1,6 +1,6 @@
 import { body, check, ValidationChain } from 'express-validator';
 
-export const createLiteryWorkValidators: ValidationChain[] = [
+export const literyWorkValidators: ValidationChain[] = [
   check('type').notEmpty().withMessage('El tipo es requerido')
                .isIn(['NOVEL', 'BOOK']).withMessage('El tipo debe ser NOVEL o BOOK'),
   check('title').notEmpty().withMessage('El título es requerido'),
@@ -15,7 +15,7 @@ export const createLiteryWorkValidators: ValidationChain[] = [
                .isInt({ min: 0 }).withMessage('El stock debe ser un número entero positivo'),
   check('price').notEmpty().withMessage('El precio es requerido')
                .isFloat({ min: 0 }).withMessage('El precio debe ser un número positivo'),
-
+  
   body('genres')
     .custom((value, { req }) => {
       if (req.body.type === 'NOVEL') {
@@ -34,7 +34,7 @@ export const createLiteryWorkValidators: ValidationChain[] = [
       }
       return true;
     }),
-
+  
   body('knowledgeAreas')
     .custom((value, { req }) => {
       if (req.body.type === 'BOOK') {
@@ -56,5 +56,5 @@ export const createLiteryWorkValidators: ValidationChain[] = [
 ];
 
 export const IdValidator = [
-    check('literyWorkId', 'El id es requerido').not().isEmpty(),
-]
+  check('literyWorkId', 'El id es requerido').not().isEmpty(),
+];

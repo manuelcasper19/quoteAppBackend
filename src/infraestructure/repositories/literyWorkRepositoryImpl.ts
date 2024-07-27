@@ -52,6 +52,7 @@ export class LiteryWorkRepositoryImpl implements IliteryWorkRepository {
         return this.executeQuery(filter, options);
     }
     async createOrUpdate(literyWork: LiteryWorkEntity): Promise<LiteryWorkEntity> {
+        console.log(literyWork)
         const persistenceEntity = LiteryWorkMapper.toPersisTenceEntity(literyWork);
         let persistenceModel: Model<ILiteryWorkBase>;
     

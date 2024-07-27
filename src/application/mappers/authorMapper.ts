@@ -4,6 +4,7 @@ import { AuthorDto } from '../dtos';
 export class AuthorMapper {
 
     static toDomain(authorDto: AuthorDto): AuthorEntity {
+        console.log(authorDto)
         return new AuthorEntity(
             authorDto.authorId,
             authorDto.name,

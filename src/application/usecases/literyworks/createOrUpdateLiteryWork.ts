@@ -12,9 +12,10 @@ export class CreateOrUpdateLiteryWorkUseCase implements IUseCase<LiteryWorkDto, 
                 ){}
   
      async execute(dto: LiteryWorkDto): Promise<LiteryWorkDto> {
+        console.log(dto)
         let literyWork: LiteryWorkEntity;
 
-        if (dto instanceof NovelDto) {
+        if (dto.type === 'NOVEL') {
             literyWork = this.literyWorkBuilder.createNovel(
                 dto.literyWorkId || '',
                 LiteryWorkMapper.mapGenres(dto.genres),
@@ -27,7 +28,7 @@ export class CreateOrUpdateLiteryWorkUseCase implements IUseCase<LiteryWorkDto, 
                 AuthorMapper.mapAuthors(dto.authors),
                 LiteryWorkMapper.mapStatus(dto.status)
             ) as NovelEntity;
-        } else if (dto instanceof BookDto) {
+        } else if (dto.type === 'BOOK') {
             literyWork = this.literyWorkBuilder.createBook(
                 dto.literyWorkId || '', 
                 dto.title,
@@ -43,7 +44,7 @@ export class CreateOrUpdateLiteryWorkUseCase implements IUseCase<LiteryWorkDto, 
         } else {
             throw new Error('Invalid LiteryWorkDto type');
         }
-
+       // console.log(literyWork)
         const savedEntity = await this.literyWorkRepository.createOrUpdate(literyWork);
 
         return LiteryWorkMapper.convertToResponseDto(savedEntity);
