@@ -27,9 +27,9 @@ export class AuthorRepositoryImpl implements IAuthorRepository {
         return this.findAuthor({ _id: id });
     }
     async findByNameAuthor(name: string): Promise<AuthorEntity[] | null> {
-
-        const authorDocs = await AuthorPersistence.find({ name: name });
-
+     
+        const authorDocs = await AuthorPersistence.find({ name: { $regex: name, $options: 'i' } });
+        console.log(authorDocs)
         return authorDocs.map(authorDoc => AuthorMapper.toDomainEntity(authorDoc));
     }
     async getAllAuthor(): Promise<AuthorEntity[] | null> {

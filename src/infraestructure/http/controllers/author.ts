@@ -1,11 +1,11 @@
 import { Request, Response} from 'express';
 import { inject } from 'inversify';
-import { controller, httpPost } from 'inversify-express-utils';
+import { controller, httpGet, httpPost } from 'inversify-express-utils';
 import { TYPESDI } from '../../containers';
 import { AuthorDto, SearchParamsAuthor } from '../../../application';
 import { IUseCase } from '../../../domain';
-import { authorValidators } from '../validators';
-import { validateField } from '../middlewares';
+import { authorValidators, validateField } from '../';
+
 
 @controller('/api/author')
 export class AuthorController {
@@ -24,5 +24,35 @@ export class AuthorController {
 
         res.status(201). json({ result });
     }
+
+    @httpGet('/:id')
+    async getById(req: Request, res: Response): Promise<void> {
+     const id = req.params.id;
+     const result = await this.genericFindAuthor.execute( {
+        method: 'findByIdAuthor',
+        param: id
+     })
+
+     res.status(200).json( { result })
+    }
+
+    @httpGet('/name/:name')
+    async getByName(req: Request, res: Response): Promise<void> {
+        const name = req.params.name;
+        const result = await this.genericFindAuthor.execute({
+            method: 'findByNameAuthor',
+            param: name
+        });
+        res.status(200).json({ name, result });
+    }
+
+    @httpGet('/')
+    async getAll(req: Request, res: Response): Promise<void> {
+        const result = await this.genericFindAuthor.execute({
+            method: 'getAllAuthor'
+        });
+        res.status(200).json({ result });
+    }
+
 
 }
