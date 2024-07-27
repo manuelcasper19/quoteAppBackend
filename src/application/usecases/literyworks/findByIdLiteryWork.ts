@@ -1,9 +1,12 @@
 import { IliteryWorkRepository, IUseCase } from '../../../domain';
 import { LiteryWorkDto, LiteryWorkMapper } from '../../';
+import { inject, injectable } from 'inversify';
+import { TYPESDI } from '../../../infraestructure/containers/types';
 
-export class CreateOrUpdateLiteryWorkUseCase implements IUseCase<string, LiteryWorkDto> {
+@injectable()
+export class GetLiteryWorkByIdUseCase implements IUseCase<string, LiteryWorkDto> {
     
-    constructor( private literyWorkRepository : IliteryWorkRepository) {}
+    constructor( @inject(TYPESDI.IliteryWorkRepository) private literyWorkRepository : IliteryWorkRepository) {}
    async execute( literyWorkId: string ): Promise<LiteryWorkDto> {
         const literyWork = await this.literyWorkRepository.findById( literyWorkId );
         if (!literyWork) {

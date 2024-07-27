@@ -1,5 +1,8 @@
 import 'dotenv/config';
-import Server from './presentation/server';
+import 'reflect-metadata';
+import './infraestructure/http/controllers'
+// Resto de tus importaciones...
+import Server from './infraestructure/server';
 
 const server = new Server()
 

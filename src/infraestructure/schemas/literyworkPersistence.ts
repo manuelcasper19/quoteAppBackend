@@ -30,6 +30,9 @@ const literyWorkPersistence = new Schema(
             required : true,
             emun: ['NOVEL', 'BOOK']
         },
+        amountBorrowed:{
+          type: Number,
+        },
         price: {
             type: Number,  
             require: [ true, 'El precio de la obra literaria es requerido']

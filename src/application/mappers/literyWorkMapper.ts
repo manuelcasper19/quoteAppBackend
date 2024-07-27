@@ -8,7 +8,7 @@ export class LiteryWorkMapper {
             if (Object.values(Genre).includes(genre as Genre)) {
                 return genre as Genre;
             }
-            throw new Error(`Invalid genre: ${genre}`);
+            throw new Error(`El genero de la novela: ${genre}, no es valido`);
         });
     }
 
@@ -16,7 +16,7 @@ export class LiteryWorkMapper {
         if (Object.values(LiteryWorkStatus).includes(status as LiteryWorkStatus)) {
             return status as LiteryWorkStatus;
         }
-        throw new Error(`Invalid status: ${status}`);
+        throw new Error(`El estado: ${status} no es valido`);
     }
 
     static mapKnowledgeAreas(areas: string[]): KnowlodgeArea[] {

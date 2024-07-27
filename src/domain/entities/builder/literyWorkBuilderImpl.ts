@@ -1,7 +1,9 @@
+import { injectable } from 'inversify';
 import { AuthorEntity, BookEntity, Genre, KnowlodgeArea, LiteryWorkEntity, LiteryWorkStatus, NovelEntity } from '../';
 
 import { ILiteryWorkBuilder } from './iliteryWork';
 
+@injectable()
 export class LiteryWorkBuilderImpl implements ILiteryWorkBuilder {
 
     private type: string = '';
