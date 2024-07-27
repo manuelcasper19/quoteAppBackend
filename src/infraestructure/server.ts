@@ -8,9 +8,9 @@ import { InversifyExpressServer } from 'inversify-express-utils';
 class Sever {
    private app : express.Application;
    private port: string;
-   private container: Container;
+   //private container: Container;
    private server: InversifyExpressServer;
-   
+
    private pathApi = {
     auth: '/api/auth',
     literyworks: '/api/literywork',
@@ -22,15 +22,20 @@ class Sever {
 
     this.port = process.env.PORT || '5002';  
     
-    this.container = container;
+   // this.container = container;
 
-    this.server = new InversifyExpressServer( this.container );
+    this.server = new InversifyExpressServer( container );
+
+    this.server.setConfig((app) => {
+      app.use(cors());
+      app.use(express.json());
+    });
     
     this.app = this.server.build();
 
     this.connectionDb();
 
-    this.middlewares(); 
+   // this.middlewares(); 
     
    }
 
@@ -38,12 +43,12 @@ class Sever {
     this.app.listen( this.port, () => console.log('server running in the port ' + this.port))
    }
 
-   private middlewares(){
+   // private middlewares(){
 
-      this.app.use( cors() );
+   //    this.app.use( cors() );
 
-      this.app.use( express.json() );
-   }     
+   //    this.app.use( express.json() );
+   // }     
    
    private async connectionDb(){
       try {

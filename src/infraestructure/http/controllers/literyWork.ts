@@ -1,5 +1,5 @@
 import { Request, Response} from 'express';
-import { injectable, inject  } from 'inversify';
+import { inject  } from 'inversify';
 import { controller, httpGet, httpPost } from 'inversify-express-utils';
 import { TYPESDI } from '../../containers';
 import { IUseCase } from '../../../domain';
@@ -14,8 +14,10 @@ export class LiteryWorkController {
     ){}
     @httpPost('/')
     async createOrUpdate(req: Request, res: Response): Promise<void> {
-        //const result = await this.createOrUpdateUseCase.execute(req.body);
-        res.status(201). json({ msg: 'createOrUpdate'});
+        const literyWorkCreateDto: LiteryWorkDto = req.body;
+        console.log(literyWorkCreateDto)
+        //const result = await this.createOrUpdateUseCase.execute(literyWorkCreateDto);
+        res.status(201). json({ msg: 'createOrUpdate', literyWorkCreateDto});
     }
     
     @httpGet('/:id')
