@@ -1,11 +1,14 @@
-import { BookEntity, IliteryWorkRepository, IUseCase, LiteryWorkDirector, LiteryWorkEntity, NovelEntity } from '../../../domain';
+import { BookEntity, ILiteryWorkDirector, IliteryWorkRepository, IUseCase, LiteryWorkDirector, LiteryWorkEntity, NovelEntity } from '../../../domain';
 import { LiteryWorkMapper, AuthorMapper,  LiteryWorkDto, NovelDto, BookDto } from '../..';
+import { injectable, inject  } from 'inversify';
+import { TYPESDI } from '../../../infraestructure/containers/types';
 
 
+@injectable()
 export class CreateOrUpdateLiteryWorkUseCase implements IUseCase<LiteryWorkDto, LiteryWorkDto> {
 
-    constructor( private literyWorkRepository : IliteryWorkRepository, 
-                 private literyWorkBuilder    : LiteryWorkDirector
+    constructor( @inject(TYPESDI.IliteryWorkRepository) private literyWorkRepository : IliteryWorkRepository, 
+                 @inject(TYPESDI.ILiteryWorkDirector) private literyWorkBuilder    : ILiteryWorkDirector
                 ){}
   
      async execute(dto: LiteryWorkDto): Promise<LiteryWorkDto> {

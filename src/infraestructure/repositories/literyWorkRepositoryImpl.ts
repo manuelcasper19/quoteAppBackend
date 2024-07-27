@@ -3,14 +3,18 @@ import { IliteryWorkRepository, IPaginationOptions, IQueryResult, LiteryWorkEnti
 import { BookEntity, LiteryWorkDirector, NovelEntity } from '../../domain/entities';
 import { LiteryWorkBasePersistence, NovelPersistence, BookPersistence, ILiteryWorkBase } from '../schemas/literyworkPersistence';
 import { LiteryWorkMapper } from '../mappers';
+import { inject, injectable } from 'inversify';
+import { TYPESDI } from '../containers/types';
 
 
 interface BaseFilter {
     status?: string;
 }
+
+@injectable()
 export class LiteryWorkRepositoryImpl implements IliteryWorkRepository {
 
-    constructor(private director: LiteryWorkDirector) { }
+    constructor( @inject(TYPESDI.ILiteryWorkDirector) private director: LiteryWorkDirector) { }
 
     async findByAuthor(author: string, options: IPaginationOptions): Promise<IQueryResult<LiteryWorkEntity>> {
         const filter = { author: { $regex: author, $options: 'i' } };

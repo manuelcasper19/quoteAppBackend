@@ -1,10 +1,16 @@
 import express from 'express';
 import cors from 'cors';
 import { dbConnectionMongo } from './database/mongose';
+import { Container } from 'inversify';
+import { container } from './containers';
+import { InversifyExpressServer } from 'inversify-express-utils';
 
 class Sever {
    private app : express.Application;
    private port: string;
+   private container: Container;
+   private server: InversifyExpressServer;
+   
    private pathApi = {
     auth: '/api/auth',
     literyworks: '/api/literywork',
@@ -13,9 +19,14 @@ class Sever {
 
    constructor() {
 
-    this.app = express();
 
-    this.port = process.env.PORT || '5002';   
+    this.port = process.env.PORT || '5002';  
+    
+    this.container = container;
+
+    this.server = new InversifyExpressServer( this.container );
+    
+    this.app = this.server.build();
 
     this.connectionDb();
 

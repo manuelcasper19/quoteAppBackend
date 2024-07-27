@@ -1,26 +1,23 @@
 import { Container } from 'inversify';
 import { ILiteryWorkDirector, IliteryWorkRepository, IUseCase, LiteryWorkDirector } from '../../domain';
-import { LiteryWorkRepositoryImpl } from '../';
+import { LiteryWorkRepositoryImpl} from '../';
 import { LiteryWorkDto, LiteryWorkQueryResultDto, CreateOrUpdateLiteryWorkUseCase, GetLiteryWorkByIdUseCase, GenericLiteryWorkSearchUseCase, SearchParams } from '../../application';
-
-export const TYPES = {
-    IliteryWorkRepository: Symbol.for("IliteryWorkRepository"),
-    ILiteryWorkDirector: Symbol.for("ILiteryWorkDirector"),
-    CreateOrUpdateLiteryWorkUseCase: Symbol.for("CreateOrUpdateLiteryWorkUseCase"),
-    GetLiteryWorkByIdUseCase: Symbol.for("GetLiteryWorkByIdUseCase"),
-    GenericLiteryWorkSearchUseCase: Symbol.for("GenericLiteryWorkSearchUseCase")
-  };
+import { TYPESDI } from './types'
+import { ILiteryWorkBuilder } from '../../domain/entities/builder/iliteryWork';
+import { LiteryWorkBuilderImpl } from '../../domain/entities/builder/literyWorkBuilderImpl';
 
 const container = new Container();
 
-container.bind<IliteryWorkRepository>(TYPES.IliteryWorkRepository).to(LiteryWorkRepositoryImpl);
+container.bind<IliteryWorkRepository>(TYPESDI.IliteryWorkRepository).to(LiteryWorkRepositoryImpl);
 
-container.bind<IUseCase<LiteryWorkDto, LiteryWorkDto>>(TYPES.CreateOrUpdateLiteryWorkUseCase).to(CreateOrUpdateLiteryWorkUseCase);
+container.bind<IUseCase<LiteryWorkDto, LiteryWorkDto>>(TYPESDI.CreateOrUpdateLiteryWorkUseCase).to(CreateOrUpdateLiteryWorkUseCase);
 
-container.bind<IUseCase<string, LiteryWorkDto>>(TYPES.GetLiteryWorkByIdUseCase).to(GetLiteryWorkByIdUseCase);
+container.bind<IUseCase<string, LiteryWorkDto>>(TYPESDI.GetLiteryWorkByIdUseCase).to(GetLiteryWorkByIdUseCase);
 
-container.bind<IUseCase<SearchParams, LiteryWorkQueryResultDto>>(TYPES.CreateOrUpdateLiteryWorkUseCase).to(GenericLiteryWorkSearchUseCase);
+container.bind<IUseCase<SearchParams, LiteryWorkQueryResultDto>>(TYPESDI.GenericLiteryWorkSearchUseCase).to(GenericLiteryWorkSearchUseCase);
 
-container.bind<ILiteryWorkDirector>(TYPES.ILiteryWorkDirector).to(LiteryWorkDirector);
+container.bind<ILiteryWorkDirector>(TYPESDI.ILiteryWorkDirector).to(LiteryWorkDirector);
+
+container.bind<ILiteryWorkBuilder>(TYPESDI.ILiteryWorkBuilder).to(LiteryWorkBuilderImpl);
 
 export { container };

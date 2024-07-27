@@ -1,12 +1,14 @@
+import { inject, injectable } from 'inversify';
 import { AuthorEntity, Genre, KnowlodgeArea, LiteryWorkEntity, LiteryWorkStatus } from '../';
 import { ILiteryWorkDirector } from '../../interfaces';
 import { ILiteryWorkBuilder } from './iliteryWork';
+import { TYPESDI } from '../../../infraestructure/containers/types';
 
+@injectable()
 export class LiteryWorkDirector implements ILiteryWorkDirector {
-    private builder: ILiteryWorkBuilder;
 
-    constructor(builder: ILiteryWorkBuilder) {
-        this.builder = builder;
+    constructor( @inject(TYPESDI.ILiteryWorkBuilder) private builder: ILiteryWorkBuilder ) {
+        
     }
 
     createNovel(
