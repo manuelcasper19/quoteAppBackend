@@ -1,7 +1,9 @@
+import { injectable } from 'inversify';
 import { AuthorEntity, IAuthorRepository } from '../../domain';
 import { AuthorMapper } from '../mappers';
 import AuthorPersistence from '../schemas/authorPersistence';
 
+@injectable()
 export class AuthorRepositoryImpl implements IAuthorRepository {
 
     async createOrUpdateAuthor(author: AuthorEntity): Promise<AuthorEntity> {

@@ -1,7 +1,7 @@
 import { Container } from 'inversify';
 import { IAuthorRepository, ILiteryWorkDirector, IliteryWorkRepository, IUseCase, LiteryWorkDirector } from '../../domain';
 import { AuthorRepositoryImpl, LiteryWorkRepositoryImpl} from '../';
-import { LiteryWorkDto, LiteryWorkQueryResultDto, CreateOrUpdateLiteryWorkUseCase, GetLiteryWorkByIdUseCase, GenericLiteryWorkSearchUseCase, SearchParams, AuthorDto, SearchParamsAuthor, GenericFindAuthorUseCase } from '../../application';
+import { LiteryWorkDto, LiteryWorkQueryResultDto, CreateOrUpdateLiteryWorkUseCase, GetLiteryWorkByIdUseCase, GenericLiteryWorkSearchUseCase, SearchParams, AuthorDto, SearchParamsAuthor, GenericFindAuthorUseCase, CreateOrUpdateAuthorUseCase } from '../../application';
 import { TYPESDI } from './types'
 import { ILiteryWorkBuilder } from '../../domain/entities/builder/iliteryWork';
 import { LiteryWorkBuilderImpl } from '../../domain/entities/builder/literyWorkBuilderImpl';
@@ -23,5 +23,7 @@ container.bind<ILiteryWorkBuilder>(TYPESDI.ILiteryWorkBuilder).to(LiteryWorkBuil
 container.bind<IAuthorRepository>(TYPESDI.IAuthorRepository).to(AuthorRepositoryImpl);
 
 container.bind<IUseCase<SearchParamsAuthor, AuthorDto | AuthorDto[]>>(TYPESDI.GenericFindAuthorUseCase).to(GenericFindAuthorUseCase);
+
+container.bind<IUseCase<AuthorDto, AuthorDto>>(TYPESDI.CreateOrUpdateAuthorUseCase).to(CreateOrUpdateAuthorUseCase);
 
 export { container };
