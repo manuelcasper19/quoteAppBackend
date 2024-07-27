@@ -2,34 +2,36 @@ import { AuthorEntity, IAuthorRepository } from '../../domain';
 import { AuthorMapper } from '../mappers';
 import AuthorPersistence from '../schemas/authorPersistence';
 
-export class AuthorRepositoryImpl implements IAuthorRepository  {
-    
-   async createOrUpdateAuthor(author: AuthorEntity): Promise<AuthorEntity> {
+export class AuthorRepositoryImpl implements IAuthorRepository {
+
+    async createOrUpdateAuthor(author: AuthorEntity): Promise<AuthorEntity> {
         let authorResp;
-        if(author.authorId){
+        if (author.authorId) {
 
-            authorResp = await AuthorPersistence.findByIdAndUpdate( author.authorId, author, { new: true });
+            authorResp = await AuthorPersistence.findByIdAndUpdate(author.authorId, author, { new: true });
 
-            if(!authorResp) throw new Error(`No se pudo actualizar el author ${ author.name }`);
+            if (!authorResp) throw new Error(`No se pudo actualizar el author ${author.name}`);
         }
-        else{
-            const authorDb = new AuthorPersistence( author );
+        else {
+            const authorDb = new AuthorPersistence(author);
 
             authorResp = await authorDb.save();
         }
-        return AuthorMapper.toDomainEntity( authorResp );
+        return AuthorMapper.toDomainEntity(authorResp);
     }
 
     async findByIdAuthor(id: string): Promise<AuthorEntity | null> {
 
         return this.findAuthor({ _id: id });
     }
-    async findByNameAuthor(name: string): Promise<AuthorEntity | null> {
+    async findByNameAuthor(name: string): Promise<AuthorEntity[] | null> {
 
-         return this.findAuthor({ name });
+        const authorDocs = await AuthorPersistence.find({ name: name });
+
+        return authorDocs.map(authorDoc => AuthorMapper.toDomainEntity(authorDoc));
     }
     async getAllAuthor(): Promise<AuthorEntity[] | null> {
-        
+
         const authorDocs = await AuthorPersistence.find({});
 
         return authorDocs.map(authorDoc => AuthorMapper.toDomainEntity(authorDoc));

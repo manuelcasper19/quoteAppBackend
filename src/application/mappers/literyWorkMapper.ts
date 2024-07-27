@@ -32,7 +32,7 @@ export class LiteryWorkMapper {
         const baseProps = {
             literyWorkId: entity.literyWorkId,
             title: entity.title,
-            authors: entity.authors.map(author => new AuthorDto(author.authorId, author.name, author.email)),
+            authors: entity.authors.map(author => new AuthorDto(author.authorId, author.name, author.email, author.active)),
             url: entity.url,
             status: entity.status,
             publicationYear: entity.publicationYear,

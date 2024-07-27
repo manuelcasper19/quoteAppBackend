@@ -6,7 +6,7 @@ export interface IAuthorRepository {
 
    findByIdAuthor( id: string): Promise<AuthorEntity | null >;
 
-   findByNameAuthor( name: string ):  Promise<AuthorEntity | null>;
+   findByNameAuthor( name: string ):  Promise<AuthorEntity[] | null>;
    
    getAllAuthor(): Promise<AuthorEntity[] | null>
    

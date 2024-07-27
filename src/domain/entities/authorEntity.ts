@@ -10,7 +10,6 @@ export class AuthorEntity {
         this.name = name;
         this.email = email;   
         this.active = active;     
-    }
-   
+    }  
 
 }
