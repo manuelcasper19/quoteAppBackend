@@ -10,7 +10,6 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
     });
   }
 
-  // Para errores no operacionales (errores de programación, etc.)
   console.error('Error:', err);
   res.status(500).json({
     status: 'error',
