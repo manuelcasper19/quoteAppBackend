@@ -6,4 +6,7 @@ export const TYPESDI = {
     GetLiteryWorkByIdUseCase: Symbol.for("GetLiteryWorkByIdUseCase"),
     GenericLiteryWorkSearchUseCase: Symbol.for("GenericLiteryWorkSearchUseCase"),
     ILiteryWorkBuilder: Symbol.for("ILiteryWorkBuilder"),
+    IAuthorRepository: Symbol.for("IAuthorRepository"),
+    GenericFindAuthorUseCase: Symbol.for("GenericFindAuthorUseCase"),
+    CreateOrUpdateAuthorUseCase: Symbol.for("CreateOrUpdateAuthorUseCase"),
   };

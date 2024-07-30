@@ -12,7 +12,7 @@ export class LiteryWorkController {
     constructor( 
         @inject(TYPESDI.CreateOrUpdateLiteryWorkUseCase) private createOrUpdateUseCase: IUseCase<LiteryWorkDto, LiteryWorkDto>,
         @inject(TYPESDI.GetLiteryWorkByIdUseCase) private getByIdUseCase: IUseCase<string, LiteryWorkDto>,
-        @inject(TYPESDI.GenericLiteryWorkSearchUseCase) private searchUseCase: IUseCase<SearchParams, LiteryWorkQueryResultDto> 
+        @inject(TYPESDI.GenericLiteryWorkSearchUseCase) private searchGenericUseCase: IUseCase<SearchParams, LiteryWorkQueryResultDto> 
     ){}
     @httpPost('/create', ...literyWorkValidators, validateField )
     async createOrUpdate(req: Request, res: Response): Promise<void> {
@@ -29,7 +29,7 @@ export class LiteryWorkController {
     }
     
     @httpPost('/search')
-    async search(req: Request, res: Response): Promise<void> {
+    async searchGeneric(req: Request, res: Response): Promise<void> {
        // const result = await this.searchUseCase.execute(req.body);
        res.status(201). json({ msg: 'search'});
     }

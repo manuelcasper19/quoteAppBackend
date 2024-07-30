@@ -39,7 +39,7 @@ export class LiteryWorkMapper {
 
 static toDomainEntity(persistence: LiteryWorkPersistence, director: LiteryWorkDirector): LiteryWorkEntity {
     const authors = (persistence.authors as IAuthor[]).map(author =>
-        new AuthorEntity(author.authorId.toString(), author.name, author.email)
+        new AuthorEntity(author.authorId.toString(), author.name, author.email, author.active )
     );
 
     return (persistence.type === 'NOVEL' ?
