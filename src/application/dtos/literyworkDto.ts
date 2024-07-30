@@ -7,9 +7,9 @@ export abstract class BaseLiteryWorkDto {
         public authors: AuthorDto[],
         public url: string,
         public status: string,
-        public publicationYear: number,
-        public stock: number,
-        public price: number
+        public publicationYear: number,      
+        public price: number,
+        public copies: CopyLiteryWorkDto[]
     ) {}
 
     abstract get type(): 'NOVEL' | 'BOOK';
@@ -17,18 +17,18 @@ export abstract class BaseLiteryWorkDto {
 
 export class NovelDto extends BaseLiteryWorkDto {
     constructor(
-        literyWorkId: string,
-        title: string,
-        authors: AuthorDto[],
-        url: string,
-        status: string,
-        publicationYear: number,
-        stock: number,
-        price: number,
-        public genres: string[],
-        public readingAge: number
+       public literyWorkId: string,
+       public title: string,
+       public authors: AuthorDto[],
+       public url: string,
+       public status: string,
+       public publicationYear: number,     
+       public price: number,
+       public copies: CopyLiteryWorkDto[],
+       public genres: string[],
+       public readingAge: number
     ) {
-        super(literyWorkId, title, authors, url, status, publicationYear, stock, price);
+        super(literyWorkId, title, authors, url, status, publicationYear,  price, copies);
     }
 
     get type(): 'NOVEL' {
@@ -38,23 +38,30 @@ export class NovelDto extends BaseLiteryWorkDto {
 
 export class BookDto extends BaseLiteryWorkDto {
     constructor(
-        literyWorkId: string,
-        title: string,
-        authors: AuthorDto[],
-        url: string,
-        status: string,
-        publicationYear: number,
-        stock: number,
-        price: number,
-        public knowledgeAreas: string[],
-        public pages: number
+       public literyWorkId: string,
+       public title: string,
+       public authors: AuthorDto[],
+       public url: string,
+       public status: string,
+       public publicationYear: number,  
+       public price: number,
+       public copies: CopyLiteryWorkDto[],
+       public knowledgeAreas: string[],
+       public pages: number
     ) {
-        super(literyWorkId, title, authors, url, status, publicationYear, stock, price);
+        super(literyWorkId, title, authors, url, status, publicationYear,  price, copies );
     }
 
     get type(): 'BOOK' {
         return 'BOOK';
     }
+}
+
+export class CopyLiteryWorkDto {
+    constructor(
+       public copiesLiteryWorkId: string,
+       public acquisitionDate: Date,
+       public statusCopy: string){}
 }
 
 export type LiteryWorkDto = NovelDto | BookDto;

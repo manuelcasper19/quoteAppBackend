@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { AuthorEntity, Genre, KnowlodgeArea, LiteryWorkEntity, LiteryWorkStatus } from '../';
+import { AuthorEntity, CopyEntity, Genre, KnowlodgeArea, LiteryWorkEntity, LiteryWorkStatus } from '../';
 import { ILiteryWorkDirector } from '../../interfaces';
 import { ILiteryWorkBuilder } from './iliteryWork';
 import { TYPESDI } from '../../../infraestructure/containers/types';
@@ -18,16 +18,17 @@ export class LiteryWorkDirector implements ILiteryWorkDirector {
         title: string,
         url: string,
         publicationYearationYear: number,
-        price: number,
-        stock: number,
+        price: number,  
         authors: AuthorEntity[],
-        status: LiteryWorkStatus       
+        status: LiteryWorkStatus,
+        copies: CopyEntity[]    
     ): LiteryWorkEntity {
 
         this.builder.setType('NOVEL');
-        this.builder.setLiteryWork(literyWorkId, title, url, publicationYearationYear, price, stock);
+        this.builder.setBody(literyWorkId, title, url, publicationYearationYear, price);
         this.builder.setGenreNovel(genres, readingAge);
         this.builder.setStatus(status);
+        this.builder.setCopies(copies);
         this.builder.setAuthor(authors);
 
         return this.builder.build();
@@ -39,19 +40,20 @@ export class LiteryWorkDirector implements ILiteryWorkDirector {
         title: string,
         url: string,
         publicationYear: number,
-        price: number,
-        stock: number,
+        price: number,      
         authors: AuthorEntity[],
         knowledgeAreas: KnowlodgeArea[],
         pages: number,
-        status: LiteryWorkStatus
+        status: LiteryWorkStatus,
+        copies: CopyEntity[]
     ): LiteryWorkEntity {
         this.builder.setType('BOOK');
-        this.builder.setLiteryWork(literyWorkId, title, url, publicationYear, price, stock);
+        this.builder.setBody(literyWorkId, title, url, publicationYear, price);
         this.builder.setAuthor(authors);
         this.builder.setKnowledgeAreaBook(knowledgeAreas, pages);
         this.builder.setStatus(status);
-
+        this.builder.setCopies(copies);
+        
         return this.builder.build();
     }
 }

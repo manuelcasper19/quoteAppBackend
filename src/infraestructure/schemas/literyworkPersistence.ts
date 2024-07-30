@@ -1,4 +1,11 @@
 import { Schema, model, Document, Model   } from 'mongoose';
+import { CopyStatus, LiteryWorkStatus } from '../../domain';
+
+interface ICopy {
+  copyLiteryWorkId: Schema.Types.ObjectId;
+  acquisitionDate: Date;
+  statusCopy: CopyStatus;
+}
 
 interface ILiteryWorkBase extends Document {
   title: string;
@@ -7,8 +14,9 @@ interface ILiteryWorkBase extends Document {
   price: number;
   stock: number;
   url: string;
-  status: 'DELETED' | 'AVAILABLE' | 'NOT_AVAILABLE';
+  status: LiteryWorkStatus;
   publicationYear: number;
+  copies: ICopy[]
 }
 
 const literyWorkPersistence = new Schema(
@@ -24,6 +32,24 @@ const literyWorkPersistence = new Schema(
                 ref: 'Author',
                 required: true
             }
+        ],
+        copies: [
+          {
+            _id: {
+              type: Schema.Types.ObjectId,
+              auto: true,
+              required: true
+            },
+            acquisitionDate: {
+              type: Date,
+              required: true
+            },
+            statusCopy: {
+              type: String,
+              enum: Object.values( CopyStatus ),
+              required: true
+            }
+          }
         ],
         type : {
             type: String,   
@@ -47,7 +73,7 @@ const literyWorkPersistence = new Schema(
         },
         status : {
             type: String,   
-             emun: ['DELETED', 'AVAILABLE', 'NOT_AVAILABLE']
+             emun: Object.values( LiteryWorkStatus )
         },
         publicationYear: {
             type: Number,
@@ -57,11 +83,6 @@ const literyWorkPersistence = new Schema(
     }
 )
 
-literyWorkPersistence.methods.toJSON = function() {
-    const { _id, __v, ...literaryWork } = this.toObject();
-    literaryWork.literyWorkId = _id;
-    return literaryWork;
-}
 
 const LiteryWorkBasePersistence = model<ILiteryWorkBase>('LiteryWorkBase', literyWorkPersistence );
 
@@ -100,5 +121,16 @@ const bookSchema = new Schema({
   //modelo discriminaro
 const BookPersistence = LiteryWorkBasePersistence.discriminator<IBook>('Book', bookSchema);
 const NovelPersistence = LiteryWorkBasePersistence.discriminator<INovel>('Novel', novelSchema);
+
+literyWorkPersistence.methods.toJSON = function() {
+  const { _id, __v, copies, ...literaryWork } = this.toObject();
+  literaryWork.literyWorkId = _id;
+  literaryWork.copies = copies.map((copy: ICopy) => {
+      const { copyLiteryWorkId, ...restCopy } = copy;
+      return { copyLiteryWorkId: copyLiteryWorkId.toString(), ...restCopy };
+  });
+  return literaryWork;
+}
+
 
 export { LiteryWorkBasePersistence, BookPersistence, NovelPersistence, ILiteryWorkBase, IBook, INovel };

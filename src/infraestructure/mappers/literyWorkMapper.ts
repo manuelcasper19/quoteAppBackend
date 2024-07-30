@@ -1,5 +1,5 @@
 import { Document, Schema } from 'mongoose';
-import { AuthorEntity, BookEntity, Genre, KnowlodgeArea, LiteryWorkDirector, LiteryWorkEntity, LiteryWorkStatus, NovelEntity } from '../../domain';
+import { AuthorEntity, BookEntity, CopyEntity, CopyStatus, Genre, KnowlodgeArea, LiteryWorkDirector, LiteryWorkEntity, LiteryWorkStatus, NovelEntity } from '../../domain';
 import { IAuthor, IBook, ILiteryWorkBase, INovel } from '../schemas';
 
 type LiteryWorkPersistence = ((ILiteryWorkBase & Document) | (IBook & Document) | (INovel & Document)) & {
@@ -17,7 +17,12 @@ export class LiteryWorkMapper {
         stock: domainEntity.stock,
         authors: domainEntity.authors.map(author => new Schema.Types.ObjectId(author.authorId)),
         status: domainEntity.status,
-        type: domainEntity instanceof NovelEntity ? 'NOVEL' : 'BOOK'
+        type: domainEntity instanceof NovelEntity ? 'NOVEL' : 'BOOK',
+        copies: domainEntity.copies.map( copy => ( {
+            copyLiteryWorkId: new Schema.Types.ObjectId( copy.copyLiteryWorkdId ),
+            acquisitionDate: copy.acquisitionDate,
+            statusCopy: copy.statusCopy as CopyStatus
+        }))
     };
 
     if (domainEntity instanceof NovelEntity) {
@@ -42,6 +47,14 @@ static toDomainEntity(persistence: LiteryWorkPersistence, director: LiteryWorkDi
         new AuthorEntity(author.authorId.toString(), author.name, author.email, author.active )
     );
 
+    const copies = persistence.copies.map(copy => 
+        new CopyEntity(
+            copy.copyLiteryWorkId.toString(),
+            copy.acquisitionDate,
+            copy.statusCopy
+        )
+    );
+
     return (persistence.type === 'NOVEL' ?
         director.createNovel(
             persistence.id,
@@ -50,22 +63,23 @@ static toDomainEntity(persistence: LiteryWorkPersistence, director: LiteryWorkDi
             persistence.title,
             persistence.url,
             persistence.publicationYear,
-            persistence.price,
-            persistence.stock,
+            persistence.price,          
             authors,
-            LiteryWorkStatus[persistence.status as keyof typeof LiteryWorkStatus])
+            LiteryWorkStatus[persistence.status as keyof typeof LiteryWorkStatus],
+            copies
+            )
         :
             director.createBook(
             persistence.id,
             persistence.title,
             persistence.url,
             persistence.publicationYear,
-            persistence.price,
-            persistence.stock,
+            persistence.price,          
             authors,
             (persistence as IBook).knowledgeAreas.map(ka => KnowlodgeArea[ka as keyof typeof KnowlodgeArea]),
             (persistence as IBook).pages,
-            LiteryWorkStatus[persistence.status as keyof typeof LiteryWorkStatus])
+            LiteryWorkStatus[persistence.status as keyof typeof LiteryWorkStatus],
+            copies)
 
     )
 }

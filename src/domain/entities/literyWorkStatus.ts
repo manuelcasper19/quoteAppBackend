@@ -1,5 +1,5 @@
 export enum LiteryWorkStatus {
     AVAILABLE = 'AVAILABLE',
-    NOT_AVAILABLE = 'NOT_AVAILABLE',
+    NO_UNITS_AVAILABLE = 'NO_UNITS_AVAILABLE',
     DELETED = 'DELETED',
 }

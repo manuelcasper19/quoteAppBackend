@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import { AuthorEntity, BookEntity, Genre, KnowlodgeArea, LiteryWorkEntity, LiteryWorkStatus, NovelEntity } from '../';
+import { AuthorEntity, BookEntity, CopyEntity, Genre, KnowlodgeArea, LiteryWorkEntity, LiteryWorkStatus, NovelEntity } from '../';
 
 import { ILiteryWorkBuilder } from './iliteryWork';
 
@@ -18,19 +18,19 @@ export class LiteryWorkBuilderImpl implements ILiteryWorkBuilder {
     private knowledgeAreas: KnowlodgeArea[] = [];
     private price: number = 0;
     private pages: number = 0;
-    public readingAge: number = 0;
+    private readingAge: number = 0;
+    private copies: CopyEntity[] = [];
 
   setType(type: string): void {
       this.type = type;     
   }
 
-  setLiteryWork(literyWorkId: string, title: string, url: string, publicationYear: number, price: number, stock: number): void {
+  setBody(literyWorkId: string, title: string, url: string, publicationYear: number, price: number): void {
     this.literyWorkId = literyWorkId;
     this.title = title;
     this.url = url;
     this.publicationYear = publicationYear;
-    this.price = price;
-    this.stock = stock;   
+    this.price = price;     
   }
 
   setAuthor(authors: AuthorEntity[]): void {
@@ -51,6 +51,10 @@ export class LiteryWorkBuilderImpl implements ILiteryWorkBuilder {
       this.status = status;
   }
 
+  setCopies(copies: CopyEntity[]): void {
+      this.copies = copies;
+  }
+
   build(): LiteryWorkEntity {
       return ( this.type === 'NOVEL' ? 
             new NovelEntity( this.genres,
@@ -59,19 +63,19 @@ export class LiteryWorkBuilderImpl implements ILiteryWorkBuilder {
                              this.title, 
                              this.url, 
                              this.publicationYear,                              
-                             this.price, 
-                             this.stock, 
+                             this.price,                            
                              this.authors,                               
-                             this.status!) :
+                             this.status!, 
+                             this.copies) :
             new BookEntity( this.pages,
                             this.knowledgeAreas,
                             this.literyWorkId, 
                             this.title, 
                             this.url, 
                             this.publicationYear,                            
-                            this.price, 
-                            this.stock, 
+                            this.price,                           
                             this.authors,                        
-                            this.status! ) );
+                            this.status!,
+                            this.copies ) );
   }
 }

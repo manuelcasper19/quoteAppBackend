@@ -1,9 +1,9 @@
-import { BookEntity, Genre, IQueryResult, KnowlodgeArea, LiteryWorkEntity, LiteryWorkStatus, NovelEntity } from '../../domain';
-import { AuthorDto, BookDto, LiteryWorkDto, LiteryWorkQueryResultDto, NovelDto } from '../dtos';
+import { AppError, BookEntity, CopyEntity, CopyStatus, Genre, IQueryResult, KnowlodgeArea, LiteryWorkEntity, LiteryWorkStatus, NovelEntity } from '../../domain';
+import { AuthorDto, BookDto, CopyLiteryWorkDto, LiteryWorkDto, LiteryWorkQueryResultDto, NovelDto } from '../dtos';
 
 export class LiteryWorkMapper {
 
-    static mapGenres(genres: string[]): Genre[] {
+    static mapGenresToEntity(genres: string[]): Genre[] {
         return genres.map(genre => {
             if (Object.values(Genre).includes(genre as Genre)) {
                 return genre as Genre;
@@ -12,19 +12,32 @@ export class LiteryWorkMapper {
         });
     }
 
-    static mapStatus(status: string): LiteryWorkStatus {
+    static mapCopiesToEntity( copies: CopyLiteryWorkDto[] ): CopyEntity[] {
+        return copies.map( entity => 
+            new CopyEntity( entity.copiesLiteryWorkId, entity.acquisitionDate, this.mapStatusCopiesToEntity(entity.statusCopy) )
+        )
+    }
+
+    static mapStatusCopiesToEntity( status: string ): CopyStatus {
+    if( Object.values( CopyStatus ).includes( status as CopyStatus )){
+        return status as CopyStatus;
+    }
+    throw new AppError(`The state: ${ status } does not exit`, 400 );
+    }
+
+    static mapStatusToEntity(status: string): LiteryWorkStatus {
         if (Object.values(LiteryWorkStatus).includes(status as LiteryWorkStatus)) {
             return status as LiteryWorkStatus;
         }
-        throw new Error(`El estado: ${status} no es valido`);
+        throw new AppError(`The state: ${ status } does not exit`, 400 );
     }
 
-    static mapKnowledgeAreas(areas: string[]): KnowlodgeArea[] {
+    static mapKnowledgeAreasToEntity(areas: string[]): KnowlodgeArea[] {
         return areas.map(area => {
             if (Object.values(KnowlodgeArea).includes(area as KnowlodgeArea)) {
                 return area as KnowlodgeArea;
             }
-            throw new Error(`Invalid knowledge area: ${area}`);
+            throw new AppError(`Invalid knowledge area: ${ area } does not exit`, 400 );            
         });
     }  
 
@@ -38,6 +51,7 @@ export class LiteryWorkMapper {
             publicationYear: entity.publicationYear,
             stock: entity.stock,
             price: entity.price,
+            copies: entity.copies.map( copy => new CopyLiteryWorkDto( copy.copyLiteryWorkdId, copy.acquisitionDate, copy.statusCopy ))
         };
     
         if (entity instanceof NovelEntity) {
@@ -49,7 +63,7 @@ export class LiteryWorkMapper {
                 baseProps.status,
                 baseProps.publicationYear,
                 baseProps.stock,
-                baseProps.price,
+                baseProps.copies,
                 entity.genres.map(g => g.toString()),
                 entity.readingAge
             );
@@ -61,8 +75,8 @@ export class LiteryWorkMapper {
                 baseProps.url,
                 baseProps.status,
                 baseProps.publicationYear,
-                baseProps.stock,
                 baseProps.price,
+                baseProps.copies,
                 entity.KnowlodgeAreas.map(ka => ka.toString()),
                 entity.pages
             );

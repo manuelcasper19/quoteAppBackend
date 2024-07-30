@@ -1,4 +1,4 @@
-import { AuthorEntity, Genre, KnowlodgeArea, LiteryWorkEntity, LiteryWorkStatus } from '../entities';
+import { AuthorEntity, CopyEntity, Genre, KnowlodgeArea, LiteryWorkEntity, LiteryWorkStatus } from '../entities';
 
 export interface ILiteryWorkDirector {
     createNovel(
@@ -8,10 +8,10 @@ export interface ILiteryWorkDirector {
         title: string,
         url: string,
         publicationYearationYear: number,
-        price: number,
-        stock: number,
+        price: number,     
         authors: AuthorEntity[],
-        status: LiteryWorkStatus       
+        status: LiteryWorkStatus ,
+        copies: CopyEntity[]      
     ): LiteryWorkEntity;
 
     createBook(
@@ -19,11 +19,11 @@ export interface ILiteryWorkDirector {
         title: string,
         url: string,
         publicationYear: number,
-        price: number,
-        stock: number,
+        price: number,     
         authors: AuthorEntity[],
         knowledgeAreas: KnowlodgeArea[],
         pages: number,
-        status: LiteryWorkStatus
+        status: LiteryWorkStatus,
+        copies: CopyEntity[]
     ): LiteryWorkEntity;
   }

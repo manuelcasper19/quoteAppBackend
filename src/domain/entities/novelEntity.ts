@@ -1,4 +1,4 @@
-import { AuthorEntity, Genre, LiteryWorkEntity, LiteryWorkStatus } from '.';
+import { AuthorEntity, CopyEntity, Genre, LiteryWorkEntity, LiteryWorkStatus } from '.';
 
 
 export class NovelEntity extends LiteryWorkEntity {
@@ -9,12 +9,12 @@ export class NovelEntity extends LiteryWorkEntity {
                  public title: string,
                  public url: string,
                  public publicationYear : number,                 
-                 public price : number,
-                 public stock : number,
+                 public price : number,               
                  public authors: AuthorEntity[],                 
-                 public status: LiteryWorkStatus  ) {
+                 public status: LiteryWorkStatus,
+                 public copies: CopyEntity[]  ) {
      
-        super( literyWorkId, title, url, publicationYear, price, stock, authors, status );     
+        super( literyWorkId, title, url, publicationYear, price,  authors, status, copies );     
     }
     
 }

@@ -18,15 +18,15 @@ export class CreateOrUpdateLiteryWorkUseCase implements IUseCase<LiteryWorkDto, 
         if (dto.type === 'NOVEL') {
             literyWork = this.literyWorkBuilder.createNovel(
                 dto.literyWorkId || '',
-                LiteryWorkMapper.mapGenres(dto.genres),
+                LiteryWorkMapper.mapGenresToEntity(dto.genres),
                 dto.readingAge,
                 dto.title,
                 dto.url,
                 dto.publicationYear,
-                dto.price,
-                dto.stock,
+                dto.price,            
                 AuthorMapper.mapAuthors(dto.authors),
-                LiteryWorkMapper.mapStatus(dto.status)
+                LiteryWorkMapper.mapStatusToEntity(dto.status),
+                LiteryWorkMapper.mapCopiesToEntity(dto.copies)
             ) as NovelEntity;
         } else if (dto.type === 'BOOK') {
             literyWork = this.literyWorkBuilder.createBook(
@@ -34,12 +34,12 @@ export class CreateOrUpdateLiteryWorkUseCase implements IUseCase<LiteryWorkDto, 
                 dto.title,
                 dto.url,
                 dto.publicationYear,
-                dto.price,
-                dto.stock,
+                dto.price,          
                 dto.authors,
-                LiteryWorkMapper.mapKnowledgeAreas(dto.knowledgeAreas),
+                LiteryWorkMapper.mapKnowledgeAreasToEntity(dto.knowledgeAreas),
                 dto.pages,
-                LiteryWorkMapper.mapStatus(dto.status)
+                LiteryWorkMapper.mapStatusToEntity(dto.status),
+                LiteryWorkMapper.mapCopiesToEntity(dto.copies)
             ) as BookEntity;
         } else {
             throw new Error('Invalid LiteryWorkDto type');
